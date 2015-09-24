@@ -3,7 +3,7 @@ from django.db import models
 
 # Create your models here.
 class User(models.Model):
-    user_id = models.IntegerField(unique=True,blank=True)
+
     name = models.CharField(max_length=30,blank=False)
     number= models.BigIntegerField(unique=True,blank=False)
     imei = models.BigIntegerField(blank=True)
@@ -14,16 +14,16 @@ class User(models.Model):
     tags = models.CharField(max_length=250,blank=True)
 
 class Places(models.Model):
-    user_id = models.IntegerField(unique=True,blank=False)
+    email = models.ForeignKey(User.email)
     latitude = models.DecimalField(max_length=20,decimal_places=9,max_digits=29,blank=False)
     longitude = models.DecimalField(max_length=20,decimal_places=9,max_digits=29,blank=False)
     address = models.CharField(max_length=150,blank=True)
     name = models.CharField(max_length=200,blank=False)
     number = models.IntegerField(blank=False)
-    category = models.CharField(blank=True)
-    description = models.CharField(blank=True)
+    category = models.CharField(max_length=300,blank=True)
+    description = models.CharField(max_length=500,blank=True)
     website= models.URLField(blank=True)
-    tag = models.CharField(blank=True)
+    tag = models.CharField(max_length=250,blank=True)
     place_id= models.IntegerField(blank=False)
    # image = models.ImageField(blank=True,upload_to=get_upload_path())
 
