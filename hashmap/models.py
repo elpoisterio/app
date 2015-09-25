@@ -14,7 +14,6 @@ class User(models.Model):
     tags = models.CharField(max_length=250,blank=True)
 
 class Places(models.Model):
-    email = models.ForeignKey(User.email)
     latitude = models.DecimalField(max_length=20,decimal_places=9,max_digits=29,blank=False)
     longitude = models.DecimalField(max_length=20,decimal_places=9,max_digits=29,blank=False)
     address = models.CharField(max_length=150,blank=True)

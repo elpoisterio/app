@@ -34,7 +34,7 @@ class UserList(APIView):
 
     def get(self, request, pk, format=None):
         users = self.get_object(data=request.data)
-        serializer = UserSerializers(users,data=request.data)
+        serializer = UserSerializers(users,email=request.data)
         if serializer.is_valid():
             return Response(serializer.data, content_type='application/json')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
