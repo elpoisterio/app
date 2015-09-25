@@ -1,8 +1,6 @@
 # Create your views here.
 from django.http import Http404
-from django.shortcuts import render
 from rest_framework import status
-from rest_framework.status import is_success
 from rest_framework.views import APIView
 from models import User, Places
 from rest_framework.response import Response
