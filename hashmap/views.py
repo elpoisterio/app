@@ -67,18 +67,18 @@ class PlaceDetails(APIView):
         return Response(serializer.errors, content_type='application/json', status=status.HTTP_400_BAD_REQUEST)
 
 class PlaceList(APIView):
-    def get_object(self, request):
+    def get_object(self, pk):
         try:
-            return Places.objects.get(data=request.data)
+            return Places.objects.get(pk=pk)
         except Places.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
-        places = self.get_object(data=request.data)
-        serializer = PlacesSerializers(places,data=request.data)
+        places = self.get_object(pk)
+        serializer = PlacesSerializers(places)
         if serializer.is_valid():
             return Response(serializer.data, content_type='application/json')
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+       # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
     def put(self, request, pk, format=None):
