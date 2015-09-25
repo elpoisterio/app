@@ -26,18 +26,17 @@ class UserDetail(APIView):
 
 
 class UserList(APIView):
-    def get_object(self, request):
+    def get_object(self, pk):
         try:
-            return User.objects.get(data=request.data)
+            return User.objects.get(pk=pk)
         except User.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
-        users = self.get_object(data=request.data)
-        serializer = UserSerializers(users,email=request.data)
-        if serializer.is_valid():
-            return Response(serializer.data, content_type='application/json')
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        users = self.get_object(pk)
+        serializer = UserSerializers(users)
+        return Response(serializer.data, content_type='application/json')
+        #return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
     def put(self, request, pk, format=None):
