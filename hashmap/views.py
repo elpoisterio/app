@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from serializers import UserSerializers, PlacesSerializers
 
 
-class UserDetail(APIView):
+class UserList(APIView):
     def get(self, request, format=None):
         # users = self.get_object(self,pk)
         users = User.objects.all()
@@ -25,35 +25,38 @@ class UserDetail(APIView):
         return Response(serializer.errors, content_type='application/json', status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserList(APIView):
-    def get_object(self, pk):
+class UserDetail(APIView):
+    def get_object(self,email ):
         try:
-            return User.objects.get(pk=pk)
+            return User.objects.get(email=email)
         except User.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, format=None):
-        users = self.get_object(pk)
+    def get(self, request, format=None):
+        email = request.GET.get('email', False)
+        users = self.get_object(email)
         serializer = UserSerializers(users)
         return Response(serializer.data, content_type='application/json')
         #return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-    def put(self, request, pk, format=None):
-        user = self.get_object(pk)
+    def put(self, request,format=None):
+        email = request.GET.get('email', False)
+        user = self.get_object(email)
         serializer = UserSerializers(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format=None):
-        user = self.get_object(pk)
+    def delete(self, request,format=None):
+        email = request.GET.get('email', False)
+        user = self.get_object(email)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class PlaceDetails(APIView):
+class PlaceList(APIView):
     def get(self):
         places = Places.objects.all()
         serializer = PlacesSerializers(places, many=True)
@@ -66,30 +69,33 @@ class PlaceDetails(APIView):
             return Response(serializer.data, content_type='application/json', status=status.HTTP_201_CREATED)
         return Response(serializer.errors, content_type='application/json', status=status.HTTP_400_BAD_REQUEST)
 
-class PlaceList(APIView):
-    def get_object(self, pk):
+class PlaceDetails(APIView):
+    def get_object(self, email):
         try:
-            return Places.objects.get(pk=pk)
+            return Places.objects.filter(email = email)
         except Places.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, format=None):
-        places = self.get_object(pk)
+    def get(self, request,format=None):
+        email = request.GET.get('email', False)
+        places = self.get_object(email)
         serializer = PlacesSerializers(places)
         if serializer.is_valid():
             return Response(serializer.data, content_type='application/json')
-       # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-    def put(self, request, pk, format=None):
-        places = self.get_object(pk)
+    def put(self, request, format=None):
+        email = request.GET.get('email', False)
+        places = self.get_object(email)
         serializer = PlacesSerializers(places, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format=None):
-        place = self.get_object(pk)
+    def delete(self, request,format=None):
+        email = request.GET.get('email', False)
+        place = self.get_object(email)
         place.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
