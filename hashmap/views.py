@@ -9,7 +9,6 @@ from serializers import UserSerializers, PlacesSerializers
 
 class UserList(APIView):
     def get(self, request, format=None):
-        # users = self.get_object(self,pk)
         users = User.objects.all()
         serializer = UserSerializers(users, many=True)
         return Response(serializer.data, content_type='application/json')
@@ -68,19 +67,18 @@ class PlaceList(APIView):
         return Response(serializer.errors, content_type='application/json', status=status.HTTP_400_BAD_REQUEST)
 
 class PlaceDetails(APIView):
-    def get_object(self, email):
+    def get_object(self, user_field):
         try:
-            return Places.objects.filter(email = email)
+            return Places.objects.filter(user_field = user_field)
         except Places.DoesNotExist:
             raise Http404
 
     def get(self, request,format=None):
-        email = request.GET.get('email', False)
-        places = self.get_object(email)
-        serializer = PlacesSerializers(places)
-        if serializer.is_valid():
-            return Response(serializer.data, content_type='application/json')
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        user_field = request.GET.get('user_field', False)
+        places = self.get_object(user_field)
+        serializer = PlacesSerializers(places,many=True)
+        return Response(serializer.data, content_type='application/json')
+        #return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
     def put(self, request, format=None):

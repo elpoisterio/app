@@ -13,8 +13,12 @@ class User(models.Model):
     address = models.CharField(max_length=150,blank=True)
     tags = models.CharField(max_length=250,blank=True)
 
+    class Meta:
+        unique_together = [("number", "email")]
+
 class Places(models.Model):
-    user_field = models.ForeignKey(User)
+
+    user_field = models.ForeignKey(User,related_query_name="emailID ")
     latitude = models.DecimalField(max_length=20,decimal_places=9,max_digits=29,blank=False)
     longitude = models.DecimalField(max_length=20,decimal_places=9,max_digits=29,blank=False)
     address = models.CharField(max_length=150,blank=True)
@@ -25,7 +29,8 @@ class Places(models.Model):
     website= models.URLField(blank=True)
     tag = models.CharField(max_length=250,blank=True)
     place_id= models.IntegerField(blank=False)
-   # image = models.ImageField(blank=True,upload_to=get_upload_path())
+    # image = models.ImageField(blank=True,upload_to=get_upload_path())
+
 
 
 '''

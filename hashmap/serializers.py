@@ -29,9 +29,10 @@ class UserSerializers(serializers.ModelSerializer):
         return instance
 
 class PlacesSerializers(serializers.ModelSerializer):
+    #user_field = serializers.Field(source='user_field.id')
     class Meta:
         model = Places
-        fields = ('id','email','latitude','longitude','address','name','number','category','description',
+        fields = ('id','user_field','latitude','longitude','address','name','number','category','description',
                   'website','tag','place_id')
 
     def create(self,validated_data):
@@ -39,7 +40,6 @@ class PlacesSerializers(serializers.ModelSerializer):
          return Places.objects.create(**validated_data)
 
     def update(self,instance,validated_data):
-        instance.email = validated_data.get('email',instance.email)
         instance.name = validated_data.get('name',instance.name)
         instance.number = validated_data.get('number',instance.number)
         instance.address = validated_data.get('address',instance.address)
